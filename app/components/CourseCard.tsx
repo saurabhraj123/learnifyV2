@@ -1,8 +1,13 @@
+import { Course } from "@prisma/client";
 import { Box, Card, Flex, Heading, Text } from "@radix-ui/themes";
 import Image from "next/image";
 import React from "react";
 
-const CourseCard = () => {
+interface Props {
+  course: Course;
+}
+
+const CourseCard = ({ course }: Props) => {
   return (
     <Card className="cursor-pointer hover:bg-gray-100/40">
       <Flex gap="4" align="center">
@@ -17,13 +22,13 @@ const CourseCard = () => {
         </Box>
 
         <Flex direction="column" justify="between">
-          <Heading size="5">Introduction to Computer Science</Heading>
+          <Heading size="5">{course.title}</Heading>
           <Text color="gray" size="3">
             In progress <Text className="inline">25%</Text>
           </Text>
 
           <Text color="gray" size="3">
-            Added on Jan 1, 2023
+            {course.createdAt.toDateString()}
           </Text>
         </Flex>
       </Flex>
