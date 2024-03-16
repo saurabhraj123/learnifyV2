@@ -1,3 +1,9 @@
+import CourseCard from "./components/CourseCard";
+
 export default function Home() {
-  return <main>hi</main>;
+  return (
+    <main>
+      <CourseCard />
+    </main>
+  );
 }
