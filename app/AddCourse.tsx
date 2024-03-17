@@ -3,6 +3,7 @@ import { Button, Flex, Heading } from "@radix-ui/themes";
 import toast, { Toaster } from "react-hot-toast";
 import { saveCourse, saveFiles, saveSections } from "./AddCourseUtils";
 import { useRouter } from "next/navigation";
+import { set } from "idb-keyval";
 
 const AddCourse = () => {
   const router = useRouter();
@@ -24,6 +25,7 @@ const AddCourse = () => {
 
     const dirHandle = await window.showDirectoryPicker();
     await processFolder(dirHandle);
+    set(dirHandle.name, dirHandle);
     router.refresh();
   };
 
