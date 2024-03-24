@@ -1,5 +1,6 @@
-import { Course, File as FileSchema, Section } from "@prisma/client";
+import { Course, File as FileSchema, Section, User } from "@prisma/client";
 import axios from "axios";
+import { Session } from "next-auth";
 
 /** Internal Utils */
 const getVideoDuration = async (file: File) => {
@@ -81,11 +82,15 @@ export const saveSections = async (
   return sectionsResolved.map((section) => section.data);
 };
 
-export const saveCourse = async (dirHandle: FileSystemDirectoryHandle) => {
+export const saveCourse = async (
+  dirHandle: FileSystemDirectoryHandle,
+  session: Session | null
+) => {
   const { name } = dirHandle;
   try {
     const { data: course } = await axios.post<Course>("/api/course", {
       title: name,
+      userId: (session?.user as User)?.id,
     });
     return course;
   } catch (err) {

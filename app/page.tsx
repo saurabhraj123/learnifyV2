@@ -14,7 +14,7 @@ export default async function Home() {
         <Flex direction="column" gap="4">
           <AddCourse />
           {courses.map((course) => (
-            <Link href={"/courses/" + course.id} key={course.id}>
+            <Link key={course.id} href={"/courses/" + course.slug}>
               <CourseCard key={course.id} course={course} />
             </Link>
           ))}

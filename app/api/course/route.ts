@@ -4,7 +4,16 @@ import z from "zod";
 
 const courseSchema = z.object({
   title: z.string().min(1, "File name is required").max(255),
+  userId: z.string().cuid(),
 });
+
+const createSlug = (title: string) => {
+  let slug = title.toLowerCase();
+  slug = slug.replace(/\s+/g, "-");
+  slug = slug.replace(/[^a-z0-9-]/g, "");
+  slug = slug.replace(/-+/g, "-");
+  return slug;
+};
 
 export async function POST(request: NextRequest) {
   const body = await request.json();
@@ -15,7 +24,7 @@ export async function POST(request: NextRequest) {
       { status: 400 }
     );
 
-  const { title } = body;
+  const { title, userId } = body;
   const course = await prisma.course.findFirst({ where: { title } });
   if (course)
     return NextResponse.json(
@@ -23,6 +32,9 @@ export async function POST(request: NextRequest) {
       { status: 409 }
     );
 
-  const newCourse = await prisma.course.create({ data: { title } });
+  const slug = createSlug(title);
+  const newCourse = await prisma.course.create({
+    data: { title, userId, slug: slug },
+  });
   return NextResponse.json(newCourse, { status: 201 });
 }

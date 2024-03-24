@@ -4,14 +4,16 @@ import toast, { Toaster } from "react-hot-toast";
 import { saveCourse, saveFiles, saveSections } from "./AddCourseUtils";
 import { useRouter } from "next/navigation";
 import { set } from "idb-keyval";
+import { useSession } from "next-auth/react";
 
 const AddCourse = () => {
   const router = useRouter();
+  const { data: session } = useSession();
 
   const processFolder = async (dirHandle: FileSystemDirectoryHandle) => {
     const toastId = toast.loading("Processing course...");
 
-    const course = await saveCourse(dirHandle);
+    const course = await saveCourse(dirHandle, session);
     if (!course) return toast.error("Failed to save course", { id: toastId });
 
     const sections = await saveSections(course.id, dirHandle);
