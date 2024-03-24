@@ -81,8 +81,12 @@ CREATE TABLE `Course` (
     `duration` INTEGER NOT NULL DEFAULT 0,
     `createdAt` DATETIME(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
     `updatedAt` DATETIME(3) NOT NULL,
+    `userId` VARCHAR(191) NOT NULL,
+    `lastOpenedResource` VARCHAR(191) NULL,
+    `slug` VARCHAR(191) NOT NULL,
 
     UNIQUE INDEX `Course_title_key`(`title`),
+    UNIQUE INDEX `Course_slug_key`(`slug`),
     PRIMARY KEY (`id`)
 ) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 
@@ -97,3 +101,6 @@ ALTER TABLE `File` ADD CONSTRAINT `File_sectionId_fkey` FOREIGN KEY (`sectionId`
 
 -- AddForeignKey
 ALTER TABLE `Section` ADD CONSTRAINT `Section_courseId_fkey` FOREIGN KEY (`courseId`) REFERENCES `Course`(`id`) ON DELETE RESTRICT ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE `Course` ADD CONSTRAINT `Course_userId_fkey` FOREIGN KEY (`userId`) REFERENCES `User`(`id`) ON DELETE RESTRICT ON UPDATE CASCADE;
