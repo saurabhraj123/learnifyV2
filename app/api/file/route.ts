@@ -2,6 +2,7 @@ import prisma from "@/prisma/client";
 import { File } from "@prisma/client";
 import { NextRequest, NextResponse } from "next/server";
 import z from "zod";
+import { createSlug } from "../utils";
 
 const fileSchema = z.object({
   title: z.string().min(1, "File name is required").max(255),
@@ -25,8 +26,10 @@ export async function POST(request: NextRequest) {
   if (!section)
     return NextResponse.json({ error: "Invalid section id" }, { status: 400 });
 
+  const slug = createSlug(title);
+
   const file = await prisma.file.create({
-    data: { title, sectionId, size, duration, type },
+    data: { title, sectionId, size, duration, type, slug },
   });
   return NextResponse.json(file, { status: 201 });
 }

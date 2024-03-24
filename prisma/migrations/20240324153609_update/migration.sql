@@ -53,7 +53,8 @@ CREATE TABLE `VerificationToken` (
 -- CreateTable
 CREATE TABLE `File` (
     `id` VARCHAR(191) NOT NULL,
-    `title` VARCHAR(191) NULL,
+    `title` VARCHAR(191) NOT NULL,
+    `slug` VARCHAR(191) NOT NULL,
     `type` VARCHAR(191) NOT NULL,
     `size` INTEGER NULL DEFAULT 0,
     `duration` INTEGER NULL DEFAULT 0,

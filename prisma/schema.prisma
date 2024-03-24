@@ -61,7 +61,8 @@ model VerificationToken {
 
 model File {
   id        String  @id @default(cuid())
-  title     String?
+  title     String
+  slug      String
   type      String
   size      Int?    @default(0)
   duration  Int?    @default(0)

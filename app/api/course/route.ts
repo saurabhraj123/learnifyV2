@@ -1,19 +1,12 @@
 import prisma from "@/prisma/client";
 import { NextRequest, NextResponse } from "next/server";
 import z from "zod";
+import { createSlug } from "../utils";
 
 const courseSchema = z.object({
   title: z.string().min(1, "File name is required").max(255),
   userId: z.string().cuid(),
 });
-
-const createSlug = (title: string) => {
-  let slug = title.toLowerCase();
-  slug = slug.replace(/\s+/g, "-");
-  slug = slug.replace(/[^a-z0-9-]/g, "");
-  slug = slug.replace(/-+/g, "-");
-  return slug;
-};
 
 export async function POST(request: NextRequest) {
   const body = await request.json();
