@@ -12,7 +12,11 @@ export default async function Home() {
 
   if (!session) return <div>Please login first...</div>;
 
-  const courses = await prisma.course.findMany();
+  const courses = await prisma.course.findMany({
+    where: {
+      userId: (session.user as any).id,
+    },
+  });
 
   return (
     <main>

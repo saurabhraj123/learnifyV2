@@ -4,6 +4,7 @@ import { Flex } from "@radix-ui/themes";
 import { getServerSession } from "next-auth";
 import React from "react";
 import VideoPlayer from "../VideoPlayer";
+import Accordion from "./components/Accordion";
 
 interface Props {
   params: { resourceId: string };
@@ -29,6 +30,22 @@ const ResourcePage = async ({ params }: Props) => {
 
   if (!resource) return <div>Resource not found</div>;
 
+  const sections = await prisma.section.findMany({
+    where: { courseId: resource.section.courseId },
+    include: {
+      files: {
+        orderBy: {
+          title: "asc",
+        },
+      },
+    },
+    orderBy: {
+      title: "asc",
+    },
+  });
+
+  console.log({ resource, sections });
+
   return (
     <Flex mx="5">
       <VideoPlayer
@@ -36,6 +53,7 @@ const ResourcePage = async ({ params }: Props) => {
         sectionName={resource.section.title}
         fileName={resource.title}
       />
+      <Accordion sections={sections} />
     </Flex>
   );
 };

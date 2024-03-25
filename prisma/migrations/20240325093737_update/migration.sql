@@ -86,8 +86,6 @@ CREATE TABLE `Course` (
     `lastOpenedResource` VARCHAR(191) NULL,
     `slug` VARCHAR(191) NOT NULL,
 
-    UNIQUE INDEX `Course_title_key`(`title`),
-    UNIQUE INDEX `Course_slug_key`(`slug`),
     PRIMARY KEY (`id`)
 ) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 

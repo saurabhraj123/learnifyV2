@@ -82,7 +82,7 @@ model Section {
 
 model Course {
   id                 String    @id @default(cuid())
-  title              String    @unique
+  title              String
   size               Int       @default(0)
   duration           Int       @default(0)
   createdAt          DateTime  @default(now())
@@ -91,5 +91,5 @@ model Course {
   userId             String
   User               User      @relation(fields: [userId], references: [id])
   lastOpenedResource String?
-  slug               String    @unique
+  slug               String
 }
