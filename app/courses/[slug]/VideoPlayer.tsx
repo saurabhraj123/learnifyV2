@@ -4,7 +4,7 @@ import {
   defaultLayoutIcons,
   DefaultVideoLayout,
 } from "@vidstack/react/player/layouts/default";
-import { set, get } from "idb-keyval";
+import { get } from "idb-keyval";
 import { useEffect, useState } from "react";
 
 interface Props {

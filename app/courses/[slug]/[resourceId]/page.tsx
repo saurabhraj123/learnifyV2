@@ -1,6 +1,6 @@
 import authOptions from "@/app/api/auth/authOptions";
 import prisma from "@/prisma/client";
-import { Flex } from "@radix-ui/themes";
+import { Box, Flex } from "@radix-ui/themes";
 import { getServerSession } from "next-auth";
 import React from "react";
 import VideoPlayer from "../VideoPlayer";
@@ -44,16 +44,17 @@ const ResourcePage = async ({ params }: Props) => {
     },
   });
 
-  console.log({ resource, sections });
-
   return (
     <Flex mx="5">
-      <VideoPlayer
-        courseName={resource.section.course.title}
-        sectionName={resource.section.title}
-        fileName={resource.title}
-      />
-      <Accordion sections={sections} />
+      <Box>
+        <VideoPlayer
+          courseName={resource.section.course.title}
+          sectionName={resource.section.title}
+          fileName={resource.title}
+        />
+      </Box>
+
+      <Accordion sections={sections} activeResourceSlug={params.resourceId} />
     </Flex>
   );
 };

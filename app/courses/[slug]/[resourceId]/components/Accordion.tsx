@@ -1,13 +1,18 @@
 "use client";
-import { Course, Section } from "@prisma/client";
+import { Course, Section, File } from "@prisma/client";
 import Link from "next/link";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 
-interface Props {
-  sections: Section[];
+interface CustomSection extends Section {
+  files: File[];
 }
 
-const Accordion = ({ sections }: Props) => {
+interface Props {
+  sections: CustomSection[];
+  activeResourceSlug: string;
+}
+
+const Accordion = ({ sections, activeResourceSlug }: Props) => {
   const [activeSection, setActiveSection] = useState<string | null>(null);
 
   const handleSectionClick = (sectionId: string) => {
@@ -16,8 +21,19 @@ const Accordion = ({ sections }: Props) => {
     );
   };
 
+  useEffect(() => {
+    const activeSection = sections.find((section) =>
+      section.files.some((file) => file.slug === activeResourceSlug)
+    );
+    if (activeSection) {
+      setActiveSection(activeSection.id);
+    }
+  }, [activeResourceSlug]);
+
+  console.log({ sections, activeResourceSlug });
+
   return (
-    <div className="bg-gray-100 p-4 rounded-md">
+    <div className="bg-gray-100 p-4 rounded-md w-[550px]">
       {sections.map((section) => (
         <div className="mb-2" key={section.id}>
           <div
@@ -37,7 +53,7 @@ const Accordion = ({ sections }: Props) => {
                 key={file.id}
                 href={`./${file.slug}`}
                 className={`p-2 border-b block border-gray-200 ${
-                  file.currentlyPlaying ? "bg-gray-200" : ""
+                  file.slug == activeResourceSlug ? "bg-red-200" : ""
                 }`}
               >
                 {file.title}

@@ -6,11 +6,12 @@ import { redirect } from "next/navigation";
 interface Props {
   params: { slug: string };
 }
+
 const CoursePage = async ({ params }: Props) => {
   const session = await getServerSession(authOptions);
   if (!session || !session.user?.email) return redirect("/");
 
-  const course = await prisma.course.findUnique({
+  const course = await prisma.course.findFirst({
     where: { slug: params.slug, userId: (session.user as any)?.id },
   });
   if (!course) return <div>Course not found</div>;
