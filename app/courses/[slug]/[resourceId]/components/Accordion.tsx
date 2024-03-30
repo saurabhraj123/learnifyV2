@@ -30,8 +30,6 @@ const Accordion = ({ sections, activeResourceSlug }: Props) => {
     }
   }, [activeResourceSlug]);
 
-  console.log({ sections, activeResourceSlug });
-
   return (
     <div className="bg-gray-100 p-4 rounded-md w-[550px]">
       {sections.map((section) => (
