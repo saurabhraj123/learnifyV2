@@ -36,7 +36,8 @@ export const getFiles = async (
   sectionId: string,
   dirHandle: FileSystemDirectoryHandle
 ) => {
-  const files: FileSchema[] = [];
+  type FileSchemaWithoutSlug = Omit<FileSchema, "slug">;
+  const files: FileSchemaWithoutSlug[] = [];
 
   for await (const [name, entry] of dirHandle) {
     if (entry.kind === "file") {
