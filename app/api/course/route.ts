@@ -39,3 +39,24 @@ export async function POST(request: NextRequest) {
   });
   return NextResponse.json(newCourse, { status: 201 });
 }
+
+interface CoursePatchSchema {
+  courseId: string;
+  lastOpenedResourceSlug: string;
+}
+
+export async function PATCH(request: NextRequest) {
+  const session = await getServerSession(authOptions);
+  if (!session)
+    return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+
+  const { courseId, lastOpenedResourceSlug }: CoursePatchSchema =
+    await request.json();
+
+  const course = await prisma.course.update({
+    where: { id: courseId },
+    data: { lastOpenedResource: lastOpenedResourceSlug },
+  });
+
+  return NextResponse.json(course);
+}

@@ -1,7 +1,12 @@
 "use client";
 import { Button, Flex, Heading } from "@radix-ui/themes";
 import toast, { Toaster } from "react-hot-toast";
-import { saveCourse, saveFiles, saveSections } from "./AddCourseUtils";
+import {
+  saveCourse,
+  saveFiles,
+  saveSections,
+  updateLastOpenedResource,
+} from "./AddCourseUtils";
 import { useRouter } from "next/navigation";
 import { set } from "idb-keyval";
 import { useSession } from "next-auth/react";
@@ -17,7 +22,9 @@ const AddCourse = () => {
     if (!course) return toast.error("Failed to save course", { id: toastId });
 
     const sections = await saveSections(course.id, dirHandle);
-    await saveFiles(sections, dirHandle);
+    const firstFile = await saveFiles(sections, dirHandle);
+    await updateLastOpenedResource(course.id, firstFile.slug);
+
     toast.success("Course processed!", { id: toastId });
   };
 

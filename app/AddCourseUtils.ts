@@ -103,18 +103,33 @@ export const saveFiles = async (
   sections: Section[],
   dirHandle: FileSystemDirectoryHandle
 ) => {
+  sections.sort((a, b) => (a.title < b.title ? -1 : 1));
+  let firstFile;
+
   for (const section of sections) {
     const sectionHandle = await dirHandle.getDirectoryHandle(section.title);
     const files = await getFiles(section.id, sectionHandle);
-
+    files.sort();
     const uploadPromises = files.map((file) => {
       return axios.post("/api/file", file);
     });
-
     try {
-      await Promise.all(uploadPromises);
+      const res = await Promise.all(uploadPromises);
+      if (!firstFile) firstFile = res[0].data;
     } catch (err) {
       console.error(err);
     }
   }
+
+  return firstFile;
+};
+
+export const updateLastOpenedResource = async (
+  courseId: string,
+  resourceId: string
+) => {
+  return axios.patch(`/api/course`, {
+    courseId,
+    lastOpenedResourceId: resourceId,
+  });
 };
