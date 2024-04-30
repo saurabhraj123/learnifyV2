@@ -1,4 +1,4 @@
-import { Course } from "@prisma/client";
+import { Course, File, Section } from "@prisma/client";
 import AddCourse from "./AddCourse";
 import CourseCard from "./components/CourseCard";
 import { Container, Flex } from "@radix-ui/themes";
@@ -16,6 +16,20 @@ export default async function Home() {
     where: {
       userId: (session.user as any).id,
     },
+    include: {
+      sections: {
+        include: {
+          files: {
+            orderBy: {
+              title: "asc",
+            },
+          },
+        },
+        orderBy: {
+          title: "asc",
+        },
+      },
+    },
   });
 
   return (
@@ -23,11 +37,44 @@ export default async function Home() {
       <Container mx="6">
         <Flex direction="column" gap="4">
           <AddCourse />
-          {courses.map((course) => (
-            <Link key={course.id} href={"/courses/" + course.slug}>
-              <CourseCard key={course.id} course={course} />
-            </Link>
-          ))}
+          {courses.map((course) => {
+            const { lastOpenedResource, sections } = course;
+            let sectionName: string | undefined;
+            let resourceName: string | undefined;
+
+            if (lastOpenedResource) {
+              const section = sections.find((section) => {
+                return section.files.find((file) => {
+                  if (file.id === lastOpenedResource) {
+                    resourceName = file.slug;
+                    return true;
+                  }
+                });
+              });
+
+              sectionName = section!.title;
+            } else {
+              const section = sections[0];
+              sectionName = section?.title;
+              resourceName = section?.files[0]?.slug;
+            }
+
+            return (
+              <Link
+                key={course.id}
+                href={
+                  "/courses/" +
+                  course.slug +
+                  "/" +
+                  sectionName +
+                  "/" +
+                  resourceName
+                }
+              >
+                <CourseCard key={course.id} course={course} />
+              </Link>
+            );
+          })}
         </Flex>
       </Container>
     </main>

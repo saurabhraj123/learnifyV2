@@ -10,25 +10,43 @@ interface CustomSection extends Section {
 interface Props {
   sections: CustomSection[];
   activeResourceSlug: string;
+  activeSectionName: string;
+  activeSection: Section;
 }
 
-const Accordion = ({ sections, activeResourceSlug }: Props) => {
-  const [activeSection, setActiveSection] = useState<string | null>(null);
+const Accordion = ({
+  sections,
+  activeResourceSlug,
+  activeSectionName,
+  activeSection,
+}: Props) => {
+  const [activeSectionId, setActiveSectionId] = useState<string | null>(
+    activeSection?.id || null
+  );
+  console.log({ activeSection, activeSectionId });
 
   const handleSectionClick = (sectionId: string) => {
-    setActiveSection((prevSection) =>
+    setActiveSectionId((prevSection) =>
       prevSection === sectionId ? null : sectionId
     );
   };
 
-  useEffect(() => {
-    const activeSection = sections.find((section) =>
-      section.files.some((file) => file.slug === activeResourceSlug)
-    );
-    if (activeSection) {
-      setActiveSection(activeSection.id);
-    }
-  }, [activeResourceSlug]);
+  // useEffect(() => {
+  //   // console.log("sectionname,", activeSectionName, activeResourceSlug);
+  //   const activeSectionId = sections.find((section) =>
+  //     section.files.some(
+  //       (file) =>
+  //         activeSectionName === section.title &&
+  //         file.slug === activeResourceSlug
+  //     )
+  //   );
+  //   // console.log({ activeSectionId, activeResourceSlug, sections });
+  //   if (activeSection) {
+  //     setActiveSectionId(activeSection.id);
+  //   }
+  // }, [activeResourceSlug]);
+
+  console.log({ activeSectionId });
 
   return (
     <div className="bg-gray-100 p-4 rounded-md w-[550px]">
@@ -43,16 +61,20 @@ const Accordion = ({ sections, activeResourceSlug }: Props) => {
           </div>
           <div
             className={`overflow-hidden transition-max-height duration-300 ease-in-out ${
-              activeSection === section.id ? "max-h-screen" : "max-h-0"
+              activeSectionId === section.id ? "max-h-screen" : "max-h-0"
             }`}
           >
             {section.files.map((file) => (
               <Link
                 key={file.id}
-                href={`./${file.slug}`}
+                href={`../${section.title}/${file.slug}`}
                 className={`p-2 border-b block border-gray-200 ${
-                  file.slug == activeResourceSlug ? "bg-red-200" : ""
+                  file.slug == activeResourceSlug &&
+                  activeSection.id === section.id
+                    ? "bg-red-200"
+                    : ""
                 }`}
+                onClick={() => setActiveSectionId(section.id)}
               >
                 {file.title}
               </Link>
